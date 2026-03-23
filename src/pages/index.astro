@@ -11,13 +11,13 @@ const blogUrl = `/${lang}/blog`;
 
 <html lang={lang}>
     <head>
-        <BaseHead title="Felix Blog" />
+        <BaseHead title="Felix Blog" description={t.home.intro} />
         <script>
             if (
                 window.location.pathname === "/" ||
                 window.location.pathname === "/index.html"
             ) {
-                window.history.replaceState(null, "", "/en/");
+                window.location.replace("/en/");
             }
         </script>
     </head>

@@ -2,29 +2,282 @@
 import BaseHead from "../../components/BaseHead.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
-import { isLang, languages, ui } from "../../i18n/ui";
+import { isLang, languages } from "../../i18n/ui";
 
 export async function getStaticPaths() {
   return languages.map((lang) => ({ params: { lang } }));
 }
 
 const { lang } = Astro.params;
+
 if (!lang || !isLang(lang)) {
   throw new Error(`Invalid language: ${lang}`);
 }
-const t = ui[lang];
+
 const blogUrl = `/${lang}/blog`;
+const aboutUrl = `/${lang}/about`;
+const projectUrl = `/${lang}/blog/caas-from-scratch-post1`;
+
+const homeContent = {
+  en: {
+    pageTitle: "Felix Doan | Backend Engineering",
+    greeting: "Hi, I'm Felix.",
+    intro:
+      "I build backend and container-based systems, with a background in computer networking and a growing focus on observability, DevOps, and cloud infrastructure.",
+    subIntro:
+      "I'm currently looking for backend intern opportunities while growing through hands-on projects around service boundaries, runtime behavior, and operational thinking.",
+
+    snapshotTitle: "Quick Snapshot",
+    snapshot: [
+      "B.S. in Information Technology, Major in Computer Networking",
+      "GPA: 7.88/10 (3.34/4.0)",
+      "AWS Certified Cloud Practitioner",
+      "TOEIC 775",
+    ],
+
+    heroPrimaryCta: "Read the CaaS series",
+    heroSecondaryCta: "About me",
+
+    featuredTitle: "Featured Project: CaaS from Scratch",
+    featuredLead:
+      "A hands-on project where I explore how backend services are provisioned, routed, isolated, and managed in container-based environments.",
+    featuredBody:
+      "This is my main technical series. Instead of building another CRUD demo, I use it to work through practical backend and infrastructure concerns such as container lifecycle management, service boundaries, routing, storage, and time-to-first-request. Alongside this, I also explore observability concerns like request correlation, structured logging, metrics, and normalized error handling in a separate backend monorepo.",
+    highlightsTitle: "What this project shows",
+    highlights: [
+      "Container lifecycle management with Docker and Docker Compose",
+      "Service-oriented backend with gateway-style traffic control",
+      "MongoDB, Redis, and MinIO for data, caching, and object storage",
+      "Practical infrastructure thinking around routing, isolation, and startup behavior",
+    ],
+    featuredCta: "Explore the project",
+
+    startTitle: "Start Here",
+    startBody:
+      "Start with the CaaS series to see how I break down backend and infrastructure problems, then explore the rest of my technical writing and experiments.",
+    startPrimaryCta: "Go to blog",
+    startSecondaryCta: "Learn more about me",
+  },
+
+  vi: {
+    pageTitle: "Felix Doan | Backend Engineering",
+    greeting: "Xin chào, mình là Felix.",
+    intro:
+      "Mình xây dựng các backend và container-based systems, với nền tảng từ computer networking và định hướng phát triển dần sang observability, DevOps và cloud infrastructure.",
+    subIntro:
+      "Hiện tại mình đang tìm cơ hội Backend Intern, đồng thời phát triển thông qua các dự án hands-on xoay quanh service boundaries, runtime behavior và operational thinking.",
+
+    snapshotTitle: "Tóm tắt nhanh",
+    snapshot: [
+      "Cử nhân Công nghệ thông tin, chuyên ngành Mạng máy tính",
+      "GPA: 7.88/10 (3.34/4.0)",
+      "AWS Certified Cloud Practitioner",
+      "TOEIC 775",
+    ],
+
+    heroPrimaryCta: "Đọc series CaaS",
+    heroSecondaryCta: "Về mình",
+
+    featuredTitle: "Dự án nổi bật: CaaS from Scratch",
+    featuredLead:
+      "Một dự án hands-on nơi mình tìm hiểu cách các backend service được khởi tạo, định tuyến, cô lập và quản lý trong môi trường chạy trên container.",
+    featuredBody:
+      "Đây là series kỹ thuật chính của mình. Thay vì làm thêm một CRUD demo quen thuộc, mình dùng dự án này để xử lý các bài toán backend và hạ tầng thực tế như quản lý vòng đời container, ranh giới giữa các service, routing, storage và time-to-first-request. Song song đó, mình cũng tìm hiểu các khía cạnh observability như request correlation, structured logging, metrics và normalized error handling trong một backend monorepo riêng.",
+    highlightsTitle: "Dự án này thể hiện",
+    highlights: [
+      "Quản lý vòng đời container với Docker và Docker Compose",
+      "Kiến trúc service-oriented với điều phối traffic theo kiểu gateway",
+      "MongoDB, Redis và MinIO cho dữ liệu, cache và object storage",
+      "Tư duy hạ tầng thực tế quanh routing, isolation và startup behavior",
+    ],
+    featuredCta: "Khám phá dự án",
+
+    startTitle: "Bắt đầu từ đây",
+    startBody:
+      "Hãy bắt đầu với series CaaS để xem cách mình bóc tách các bài toán backend và hạ tầng, sau đó tiếp tục với các bài technical writing và những thử nghiệm khác.",
+    startPrimaryCta: "Đi tới blog",
+    startSecondaryCta: "Xem thêm về mình",
+  },
+} as const;
+
+const content = homeContent[lang];
 ---
+
 <html lang={lang}>
-  <head><BaseHead title="Felix Blog" /></head>
+  <head>
+    <BaseHead title={content.pageTitle} />
+    <style>
+      main {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 2rem 1rem 3rem;
+      }
+
+      .hero {
+        margin-bottom: 2rem;
+      }
+
+      .hero h1 {
+        margin-bottom: 0.75rem;
+        line-height: 1.2;
+      }
+
+      .intro {
+        margin: 0 0 0.75rem;
+        font-size: 1.05rem;
+        line-height: 1.7;
+        color: rgba(var(--black), 0.88);
+      }
+
+      .section {
+        margin-top: 1.5rem;
+      }
+
+      .card {
+        border: 1px solid rgba(var(--black), 0.12);
+        border-radius: 14px;
+        padding: 1.2rem;
+        background: white;
+      }
+
+      .card h2 {
+        margin-top: 0;
+        margin-bottom: 0.75rem;
+      }
+
+      .card p {
+        line-height: 1.7;
+      }
+
+      .badge-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        margin: 1rem 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.55rem 0.8rem;
+        border-radius: 999px;
+        border: 1px solid rgba(var(--black), 0.12);
+        background: rgba(var(--gray-light), 0.4);
+        font-size: 0.95rem;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+      }
+
+      .button {
+        display: inline-block;
+        padding: 0.72rem 1rem;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 700;
+        border: 1px solid rgba(var(--black), 0.12);
+        transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+      }
+
+      .button.primary {
+        background: rgba(var(--black), 0.92);
+        color: white;
+      }
+
+      .button.secondary {
+        background: transparent;
+        color: inherit;
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+      }
+
+      .featured strong {
+        display: inline-block;
+        margin-bottom: 0.5rem;
+      }
+
+      .featured ul {
+        margin: 0.75rem 0 0;
+        padding-left: 1.2rem;
+      }
+
+      .featured li {
+        margin-bottom: 0.55rem;
+        line-height: 1.65;
+      }
+    </style>
+  </head>
+
   <body>
     <Header />
-    <main style="max-width:900px;margin:0 auto;padding:2rem 1rem;">
-      <h1>{t.home.title}</h1>
-      <p>
-        {t.home.intro} <a href={blogUrl}>{t.home.blogLink}</a>.
-      </p>
+
+    <main>
+      <section class="hero">
+        <h1>{content.greeting}</h1>
+        <p class="intro">{content.intro}</p>
+        <p class="intro">{content.subIntro}</p>
+
+        <section class="card">
+          <h2>{content.snapshotTitle}</h2>
+          <ul class="badge-list">
+            {content.snapshot.map((item) => (
+              <li class="badge">{item}</li>
+            ))}
+          </ul>
+
+          <div class="actions">
+            <a class="button primary" href={projectUrl}>
+              {content.heroPrimaryCta}
+            </a>
+            <a class="button secondary" href={aboutUrl}>
+              {content.heroSecondaryCta}
+            </a>
+          </div>
+        </section>
+      </section>
+
+      <section class="section card featured">
+        <h2>{content.featuredTitle}</h2>
+        <p><strong>{content.featuredLead}</strong></p>
+        <p>{content.featuredBody}</p>
+
+        <h3>{content.highlightsTitle}</h3>
+        <ul>
+          {content.highlights.map((highlight) => (
+            <li>{highlight}</li>
+          ))}
+        </ul>
+
+        <div class="actions">
+          <a class="button primary" href={projectUrl}>
+            {content.featuredCta}
+          </a>
+        </div>
+      </section>
+
+      <section class="section card">
+        <h2>{content.startTitle}</h2>
+        <p>{content.startBody}</p>
+
+        <div class="actions">
+          <a class="button primary" href={blogUrl}>
+            {content.startPrimaryCta}
+          </a>
+          <a class="button secondary" href={aboutUrl}>
+            {content.startSecondaryCta}
+          </a>
+        </div>
+      </section>
     </main>
+
     <Footer />
   </body>
 </html>
